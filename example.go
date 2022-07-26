@@ -3,12 +3,17 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 
 	"github.com/rmacdiarmid/myhttp/gohttp"
 )
 
+var (
+	httpClient = gohttp.New()
+)
+
 func main() {
-	client := gohttp.New()
+	headers := make(http.Header)
 
 	response, err := client.Get("https://api.github.com", nil)
 	if err != nil {
