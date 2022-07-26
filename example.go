@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"myhttp/gohttp"
+
+	"github.com/rmacdiarmid/myhttp/gohttp"
 )
 
 func main() {
