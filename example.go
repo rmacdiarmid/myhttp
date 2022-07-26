@@ -3,19 +3,31 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	"github.com/rmacdiarmid/myhttp/gohttp"
 )
 
 var (
-	httpClient = gohttp.New()
+	githubHttpClient = getGithubClient()
 )
 
-func main() {
-	headers := make(http.Header)
+func getGithubClient() gohttp.HttpClient {
+	client := gohttp.New()
 
-	response, err := client.Get("https://api.github.com", nil)
+	// commonHeaders := make(http.Header)
+	// commonHeaders.Set("Authorization", "Password Blah Blah")
+	// client.SetHeaders(commonHeaders)
+
+	return client
+}
+
+func main() {
+	getUrls()
+}
+
+func getUrls() {
+
+	response, err := githubHttpClient.Get("https://api.github.com", nil)
 	if err != nil {
 		panic(err)
 	}
