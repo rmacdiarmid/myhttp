@@ -1,6 +1,6 @@
 package gohttp
 
-//test
+//test2
 import "net/http"
 
 type httpClient struct{}
