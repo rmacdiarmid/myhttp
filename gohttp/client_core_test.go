@@ -30,6 +30,35 @@ func TestGetRequestHeaders(t *testing.T) {
 		t.Error("invalid content type received")
 	}
 	if finalHeaders.Get("User-Agent") != "cool-http-client" {
-		t.Error("invalid User Agent received")
+		t.Error("invalid user agent received")
 	}
+}
+func TestGetRequestBodyNilBody(t *testing.T) {
+	//initialization
+	client := httpClient{}
+	//execution
+	body, err := client.getRequestBody("", nil)
+	//validation
+	if err != nil {
+		t.Error("no error expected when passing a nil body")
+	}
+	if body != nil {
+		t.Error("no body expected when a nil passing body")
+	}
+
+}
+func TestGetRequestBodyWithJson(t *testing.T) {
+	//initialization
+	//execution
+	//validation
+}
+func TestGetRequestBodyWithXml(t *testing.T) {
+	//initialization
+	//execution
+	//validation
+}
+func TestGetRequestBodyWithJsonAsDefault(t *testing.T) {
+	//initialization
+	//execution
+	//validation
 }
