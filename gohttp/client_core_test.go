@@ -1,6 +1,7 @@
 package gohttp
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 )
@@ -33,32 +34,48 @@ func TestGetRequestHeaders(t *testing.T) {
 		t.Error("invalid user agent received")
 	}
 }
-func TestGetRequestBodyNilBody(t *testing.T) {
+func TestGetRequestBody(t *testing.T) {
 	//initialization
 	client := httpClient{}
-	//execution
-	body, err := client.getRequestBody("", nil)
-	//validation
-	if err != nil {
-		t.Error("no error expected when passing a nil body")
-	}
-	if body != nil {
-		t.Error("no body expected when a nil passing body")
-	}
 
-}
-func TestGetRequestBodyWithJson(t *testing.T) {
-	//initialization
+	t.Run("noBodyNilResponse", func(t *testing.T) {
+		//execution
+		body, err := client.getRequestBody("", nil)
+		//validation
+		if err != nil {
+			t.Error("no error expected when passing a nil body")
+		}
+		if body != nil {
+			t.Error("no body expected when a nil passing body")
+		}
+	})
+
+	t.Run("bodyWithJson", func(t *testing.T) {
+		//execution
+		requestBody := []string{"one", "two"}
+
+		body, err := client.getRequestBody("application/json", requestBody)
+
+		fmt.Println(err)
+		fmt.Println(string(body))
+
+		//validation
+		if err != nil {
+			t.Error("no error expected when marshaling slice as json")
+		}
+		if string(body) != `["one","two"]` {
+			t.Error("invalid json body obtained")
+		}
+
+	})
+
+	/* t.Run("bodyWithXml",func(t *testing.T)) {
 	//execution
 	//validation
-}
-func TestGetRequestBodyWithXml(t *testing.T) {
-	//initialization
+	 }
+
+	t.Run("bodyWithJsonAsDefault",func(t *testing.T)) {
 	//execution
 	//validation
-}
-func TestGetRequestBodyWithJsonAsDefault(t *testing.T) {
-	//initialization
-	//execution
-	//validation
+	} */
 }
