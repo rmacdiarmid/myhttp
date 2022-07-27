@@ -1,18 +1,20 @@
 package gohttp
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"net/http"
+	"strings"
 )
 
-func (c *httpClient) getRequestBody(body interface{}) ([]byte, error) {
+func (c *httpClient) getRequestBody(contentType string, body interface{}) ([]byte, error) {
 	if body == nil {
 		return nil, nil
 	}
 
-	switch contentType {
+	switch strings.ToLower(contentType) {
 	case "application/json":
 		return json.Marshal(body)
 	case "application/xml":
@@ -28,8 +30,11 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 	fullHeaders := c.getRequestHeaders(headers)
 
 	requestBody, err := c.getRequestBody(fullHeaders.Get("Content-Type"), body)
+	if err != nil {
+		return nil, err
+	}
 
-	request, err := http.NewRequest(method, url, nil)
+	request, err := http.NewRequest(method, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, errors.New("unable to create a new request")
 	}
