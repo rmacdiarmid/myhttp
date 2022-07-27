@@ -23,4 +23,13 @@ func TestGetRequestHeaders(t *testing.T) {
 	if len(finalHeaders) != 3 {
 		t.Error("we expect 3")
 	}
+	if finalHeaders.Get("X-Request-Id") != "Abc-123" {
+		t.Error("invalid request id received")
+	}
+	if finalHeaders.Get("Content-Type") != "application/json" {
+		t.Error("invalid content type received")
+	}
+	if finalHeaders.Get("User-Agent") != "cool-http-client" {
+		t.Error("invalid User Agent received")
+	}
 }
