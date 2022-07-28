@@ -2,17 +2,11 @@ package gohttp
 
 import (
 	"net/http"
-	"time"
 )
 
 type httpClient struct {
-	client *http.Client
-
-	headers            http.Header
-	maxIdleConnections int
-	connectionTimeout  time.Duration
-	responseTimeout    time.Duration
-	disableTimeouts    bool
+	builder *clientBuilder
+	client  *http.Client
 }
 type Client interface {
 

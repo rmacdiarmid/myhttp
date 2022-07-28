@@ -22,9 +22,7 @@ func getGithubClient() gohttp.Client {
 
 func main() {
 	getUrls()
-	getUrls()
-	getUrls()
-	getUrls()
+
 }
 
 type User struct {
