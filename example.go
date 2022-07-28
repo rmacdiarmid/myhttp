@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"time"
 
 	"github.com/rmacdiarmid/myhttp/gohttp"
 )
@@ -14,9 +16,12 @@ var (
 func getGithubClient() gohttp.HttpClient {
 	client := gohttp.New()
 
-	// commonHeaders := make(http.Header)
-	// commonHeaders.Set("Authorization", "Password Blah Blah")
-	// client.SetHeaders(commonHeaders)
+	client.SetConnectionTimeout(2 * time.Second)
+	client.SetResponseTimeout(4 * time.Second)
+
+	commonHeaders := make(http.Header)
+	commonHeaders.Set("Authorization", "Bearer ABC-123")
+	client.SetHeaders(commonHeaders)
 
 	return client
 }

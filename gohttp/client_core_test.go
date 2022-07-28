@@ -16,7 +16,7 @@ func TestGetRequestHeaders(t *testing.T) {
 
 	//execution
 	requestHeaders := make(http.Header)
-	requestHeaders.Set("X-Request-Id", "Abc-123")
+	requestHeaders.Set("X-Request-Id", "ABC-123")
 
 	finalHeaders := client.getRequestHeaders(requestHeaders)
 
@@ -24,7 +24,7 @@ func TestGetRequestHeaders(t *testing.T) {
 	if len(finalHeaders) != 3 {
 		t.Error("we expect 3")
 	}
-	if finalHeaders.Get("X-Request-Id") != "Abc-123" {
+	if finalHeaders.Get("X-Request-Id") != "ABC-123" {
 		t.Error("invalid request id received")
 	}
 	if finalHeaders.Get("Content-Type") != "application/json" {

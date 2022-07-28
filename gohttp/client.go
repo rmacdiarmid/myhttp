@@ -1,24 +1,30 @@
 package gohttp
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 type httpClient struct {
-	client  *http.Client
-	Headers http.Header
+	client             *http.Client
+	maxIdleConnections int
+	connectionTimeout  time.Duration
+	responseTimeout    time.Duration
+	Headers            http.Header
 }
 
 func New() HttpClient {
-	client := http.Client{}
-
-	httpClient := &httpClient{
-		client: &client,
-	}
+	httpClient := &httpClient{}
 	return httpClient
 
 }
 
 type HttpClient interface {
 	SetHeaders(headers http.Header)
+	SetConnectionTimeout(timeout time.Duration)
+	SetResponseTimeout(timeout time.Duration)
+	SetMaxIdleConnections(i int)
+
 	Get(url string, headers http.Header) (*http.Response, error)
 	Post(url string, headers http.Header, body interface{}) (*http.Response, error)
 	Put(url string, headers http.Header, body interface{}) (*http.Response, error)
@@ -31,6 +37,20 @@ func (c *httpClient) SetHeaders(headers http.Header) {
 	c.Headers = headers
 }
 
+//Setting Timeout customization
+func (c *httpClient) SetConnectionTimeout(timeout time.Duration) {
+	c.connectionTimeout = timeout
+}
+
+func (c *httpClient) SetResponseTimeout(timeout time.Duration) {
+	c.responseTimeout = timeout
+}
+
+func (c *httpClient) SetMaxIdleConnections(i int) {
+	c.maxIdleConnections = i
+}
+
+//Basic CRUD Methods setup from HttpClient struct
 func (c *httpClient) Get(url string, headers http.Header) (*http.Response, error) {
 	return c.do(http.MethodGet, url, headers, nil)
 }

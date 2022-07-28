@@ -5,8 +5,16 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"net"
 	"net/http"
 	"strings"
+	"time"
+)
+
+const (
+	defaultMaxIdleConnections = 5
+	defaultResponseTimeout    = 5 * time.Second
+	defaultConnectionTimeout  = 1 * time.Second
 )
 
 func (c *httpClient) getRequestBody(contentType string, body interface{}) ([]byte, error) {
@@ -32,7 +40,6 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 	if err != nil {
 		return nil, err
 	}
-
 	request, err := http.NewRequest(method, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, errors.New("unable to create a new request")
@@ -40,9 +47,53 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 
 	request.Header = fullHeaders
 
-	return c.client.Do(request)
+	client := c.getHttpClient()
+
+	return client.Do(request)
 
 }
+
+func (c *httpClient) getHttpClient() *http.Client {
+	if c.client != nil {
+		return c.client
+	}
+	c.client = &http.Client{
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost:   c.getMaxIdleConnections(),
+			ResponseHeaderTimeout: c.getResponseTimeout(),
+			DialContext: (&net.Dialer{
+				Timeout: c.getConnectionTimeout(),
+			}).DialContext,
+		},
+	}
+	return c.client
+}
+
+//Setting Default connections:
+//MaxIdle
+func (c *httpClient) getMaxIdleConnections() int {
+	if c.maxIdleConnections > 0 {
+		return c.maxIdleConnections
+	}
+	return defaultMaxIdleConnections
+}
+
+//ResponseTimout
+func (c *httpClient) getResponseTimeout() time.Duration {
+	if c.responseTimeout > 0 {
+		return c.responseTimeout
+	}
+	return defaultResponseTimeout
+}
+
+//ConnectionTimout
+func (c *httpClient) getConnectionTimeout() time.Duration {
+	if c.connectionTimeout > 0 {
+		return c.connectionTimeout
+	}
+	return defaultConnectionTimeout
+}
+
 func (c *httpClient) getRequestHeaders(requestHeaders http.Header) http.Header {
 	result := make(http.Header)
 
