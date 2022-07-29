@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	"github.com/rmacdiarmid/myhttp/gohttp"
 )
@@ -21,8 +22,12 @@ func getGithubClient() gohttp.Client {
 }
 
 func main() {
-	getUrls()
-
+	for i := 0; i < 1000; i++ {
+		go func() {
+			getUrls()
+		}()
+	}
+	time.Sleep(20 * time.Second)
 }
 
 type User struct {
