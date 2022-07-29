@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/rmacdiarmid/myhttp/gohttp"
@@ -52,7 +53,7 @@ func TestGetEndpoints(t *testing.T) {
 		if err == nil {
 			t.Error("an error was expected")
 		}
-		if err.Error() != "json unmarshal error" {
+		if !strings.Contains(err.Error(), "cannot unmarshal number into Go struct field") {
 			t.Error("invalid error message recieved")
 		}
 	})
